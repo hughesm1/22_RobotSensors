@@ -28,7 +28,7 @@ def main():
     # run_test_beep_and_tone()
     # run_test_go_straight_for_seconds()
     # run_test_go_straight_for_inches_using_time()
-    # run_test_go_straight_for_inches_using_sensor()
+    run_test_go_straight_for_inches_using_sensor()
     # run_test_raise_arm()
     # run_test_lower_arm()
     # run_test_go_straight_until_black()
@@ -57,7 +57,13 @@ def run_test_beep_and_tone():
     #   in increments of 10, with 50 millisecond durations.
     #   Do not forget to apply the   wait   method to tone, as usual.
     # -------------------------------------------------------------------------
+    beep_beep = Beeper()
+    for j in range(10):
+        beep_beep.beep().wait()
 
+    toney = ToneMaker()
+    for k in range(10):
+        toney.tone(100 + (10 * k), 50).wait()
 
 # -----------------------------------------------------------------------------
 # TODO 5:  With your instructor, do quiz questions XXX through XXX.
@@ -173,14 +179,14 @@ def run_test_go_straight_for_inches_using_sensor():
     drive_system.go_straight_for_inches_using_sensor(12, -50)
 
     # -------------------------------------------------------------------------
-    # TODO: 9.  With your instructor, implement the
+    # DONE: 9.  With your instructor, implement the
     #      go_straight_for_inches_using_sensor    method of   DriveSystem.
     #      The tests are already written for you -- READ THEM (above).
     # -------------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------------
-# TODO 10:  With your instructor, do quiz questions XXX through XXX.
+# DONE 10:  With your instructor, do quiz questions XXX through XXX.
 #          After you understand the answers to those questions,
 #          mark this _TODO_ as DONE.
 # -----------------------------------------------------------------------------
@@ -328,7 +334,6 @@ class DriveSystem(object):
         self.left_motor = Motor('B')
         self.right_motor = Motor('C')
 
-
     def go(self, left_wheel_speed, right_wheel_speed):
         self.left_motor.turn_on(left_wheel_speed)
         self.right_motor.turn_on(right_wheel_speed)
@@ -357,6 +362,14 @@ class DriveSystem(object):
     def go_straight_for_inches_using_sensor(self, inches, speed):
         pass
         # Live code this with students
+        motor = Motor('B')
+        motor.reset_position()
+        inches_per_degree = self.left_motor.WheelCircumference / 360
+        self.go(speed, speed)
+        while True:
+            if abs(motor.get_position() * inches_per_degree) >= inches:
+                self.stop()
+                break
 
     def go_straight_until_black(self, speed):
         """
@@ -364,6 +377,11 @@ class DriveSystem(object):
         a black surface, as measured by the color sensor.
         """
         pass
+        self.go(speed, speed)
+        color = ColorSensor(3)
+        while True:
+            if color.get_reflected_light_intensity() >= 70:
+                
 
     def go_forward_until_distance_is_less_than(self, inches, speed):
         """
@@ -386,8 +404,9 @@ class DriveSystem(object):
 #   -- Motor
 #   -- TouchSensor
 #   -- ColorSensor
-#   -- IR_DistanceSensor
-#   --
+#   -- infraredProximitySesnor
+#   --Beeper
+#   --ToneMotor
 # USE them, but do NOT modify them.
 ###############################################################################
 class Motor(object):
