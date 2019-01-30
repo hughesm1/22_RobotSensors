@@ -381,7 +381,7 @@ class DriveSystem(object):
         color = ColorSensor(3)
         while True:
             if color.get_reflected_light_intensity() >= 70:
-                
+
 
     def go_forward_until_distance_is_less_than(self, inches, speed):
         """
